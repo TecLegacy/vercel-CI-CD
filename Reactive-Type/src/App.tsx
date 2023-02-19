@@ -1,34 +1,56 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import Home from '@/pages/home/Home';
+import ErrorEle from '@/pages/ErrorEle';
+import Product from '@/pages/Product';
+import Layout from '@/pages/Layout';
+import Item from '@/pages/items/Item';
+import NewEventPage from '@/pages/NewEventPages';
+import EditEventPage from '@/pages/EditEventPages';
 
-function App() {
-  const [count, setCount] = useState(0)
+import { starWarApi } from '@/pages/NewEventPages';
 
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+
+const App: React.FC = () => {
+  const Router = createBrowserRouter([
+    // { path: '/', element: <Home /> },
+    // { path: '/product', element: <Product /> },
+
+    //# layout with RR
+    {
+      path: '/',
+      element: <Layout />,
+      errorElement: <ErrorEle />, // Fallback error handling page
+      children: [
+        // Relative path
+        { path: '', element: <Home /> },
+        // { path: 'product', element: <Product /> ,},
+        { path: 'items/:itemId', element: <Item /> }, //Dynamic and nested Routes
+        //Fetching star war api data
+        {
+          path: 'items/new',
+          element: <NewEventPage />,
+          loader: starWarApi, // loading data
+        },
+        { path: 'items/:someId/edit', element: <EditEventPage /> },
+      ],
+    },
+    {
+      path: '/product',
+      errorElement: <ErrorEle />,
+      element: <Layout />,
+      children: [
+        {
+          index: true,
+          element: <Product />,
+        },
+      ],
+    },
+  ]);
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
-}
+    <>
+      <RouterProvider router={Router} />
+    </>
+  );
+};
 
-export default App
+export default App;
