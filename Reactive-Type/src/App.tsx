@@ -6,7 +6,8 @@ import Item from '@/pages/items/Item';
 import NewEventPage from '@/pages/NewEventPages';
 import EditEventPage from '@/pages/EditEventPages';
 
-import { starWarApi } from '@/pages/NewEventPages';
+// import { starWarApi } from '@/pages/NewEventPages';
+import { starWarApi } from '@/git';
 
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
@@ -29,7 +30,16 @@ const App: React.FC = () => {
         {
           path: 'items/new',
           element: <NewEventPage />,
-          loader: starWarApi, // loading data
+          // loader: starWarApi, // loading data
+          loader: () => {
+            starWarApi()
+              .then((data) => {
+                console.log(data);
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          },
         },
         { path: 'items/:someId/edit', element: <EditEventPage /> },
       ],
@@ -54,3 +64,5 @@ const App: React.FC = () => {
 };
 
 export default App;
+
+//Resolving git conflicts
